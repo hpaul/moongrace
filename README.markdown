@@ -14,8 +14,8 @@ Requirements
 Features
 --------
 
-*Simple
-*Easy to write MVC 
-*Based on plugins(bundle) 
+* Simple
+* Easy to write MVC 
+* Based on plugins(bundle) 
 	that means framework come with basic features like database ORM and routing
-*Simple routing, you can pass how many argument you want to controller, and have a delightful syntax for registering 
+* Simple routing, you can pass how many argument you want to controller, and have a delightful syntax for registering 
