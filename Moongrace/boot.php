@@ -32,7 +32,7 @@ set_exception_handler(function($exception) use ($handler)
 
 
 function load_core($class) {
-    $file = SYS.DIRECTORY_SEPARATOR.'Bootcamp'.DIRECTORY_SEPARATOR.$class.'.php';
+    $file = SYS.DIRECTORY_SEPARATOR.'Bootcamp'.DIRECTORY_SEPARATOR.$class.EXT;
     require_once($file);
 }
 
