@@ -32,12 +32,16 @@ class Uri extends Application {
 	 * Get uri string
 	 *
 	 * @return string
-	 * @author Claudiu Tașcă
 	 */
 	public function get_uri_string() {
-		$uri = $_SERVER['REQUEST_URI'];
-		$uri = str_replace($_SERVER['SCRIPT_NAME'] . '/', '', $uri);
-		$uri = str_replace($_SERVER['SCRIPT_NAME'] . '', '', $uri);
+		
+		//Parse the request URI
+		$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+		//Explode controller action and rest segments
+		//Clean empty key
+		$uri = array_merge(array_diff(explode('/',$uri), array('')));
+
 		return $uri;
 	}
 
@@ -48,7 +52,7 @@ class Uri extends Application {
 	 * @author Claudiu Tașcă
 	 */
 	private function set_array() {
-		$this -> segments = explode('/', parse_url($this -> string, PHP_URL_PATH));
+		$this -> segments = explode('/', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 		if((!isset($this -> segments[1]) || empty($this -> segments[1])) || (!isset($this -> segments[0]) || $this -> segments[0]) == '')
 			$this -> segments[1] = 'index';
 		if(!isset($this -> segments[0]) || $this -> segments[0] == '')
@@ -56,14 +60,39 @@ class Uri extends Application {
 	}
 
 	/**
-	 * Reveals real path
+	 * Route the current URL to specific Controller and action
 	 *
+	 * Default controller defined in config
+	 * Default action is index
 	 * @return array
-	 * @author Claudiu Tașcă
 	 */
-	public function route($uri_string = '', $routes = array()) {
-	    if(array_key_exists($uri_string, $routes)) return array('Controller'=>$routes[$uri_string]['Controller'], 'Action'=>$routes[$uri_string]['Action'], array());
-	    else return array('Controller' => $this -> segment(0), 'Action' => $this -> segment(1), array());
+	public function route($uri_string = array()) {
+		if(!isset($uri_string[0])) {
+			$router['Controller'] = Config::default_action;
+			$router['Action'] = 'index';
+		}
+		
+		//We nedd to know if the request has input
+		elseif(count($uri_string) > 2) {
+			$router['Controller'] = $uri_string[0];
+			$router['Action'] = $uri_string[1];
+			
+			uset($uri_string[0]);
+			uset($uri_string[1]);
+			foreach($uri_string as $input) {
+				$router['input'][] = $input;
+			}
+		}
+		elseif(!isset($uri_string[1])) {
+			$router['Controller'] = $uri_string[0];
+			$router['Action'] = 'index';
+		}
+		else {
+			$router['Controller'] = $uri_string[0];
+			$router['Action'] = $uri_string[1];
+		}
+
+		return $router;
 	}
 
 	/**

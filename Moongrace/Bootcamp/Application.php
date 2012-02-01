@@ -7,9 +7,9 @@ class Application {
 	public $config;
 
 	public function __construct($config = array()) {
-		$this -> loadLib('uri');
-		$this -> config = $config;
-        $route = $this -> uri -> route ( $this -> uri -> get_uri_string() );
+		$this->loadLib('uri');
+		$this->config = $config;
+        $route = $this->uri->route( $this->uri->get_uri_string() );
 		new Controller($route['Controller'], $route['Action']);
 		
 		

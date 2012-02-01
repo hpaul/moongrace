@@ -9,6 +9,11 @@ class Welcome extends Controller {
 	{
 		$this->loadView('index');
 	}
+
+	public function shit()
+	{
+		echo 'Mananci cacat';
+	}
 }
 
 ?>
